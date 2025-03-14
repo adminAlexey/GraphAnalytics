@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script>{%  include 'lib/bindings/utils.js' %}</script>
+        <script>{%  include 'lib/vis-9.1.2/vis-network.min.js' %}</script>
+        <style type="text/css">
+            #mynetwork {
+                width: {{width}};
+                height: {{height}};
+                background-color: {{bgcolor}};
+                border: 1px solid lightgray;
+                position: relative;
+                float: left;
+            }             
+        </style>
+    </head>
+
+    <body>
+        <div class="card" style="width: 100%">
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+        <script type="text/javascript">
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var network;
+              var container;
+              var options, data;
+
+            function drawGraph() {
+                var container = document.getElementById('mynetwork');
+                nodes = new vis.DataSet({{nodes|tojson}});
+                edges = new vis.DataSet({{edges|tojson}});
+                nodeColors = {};
+                allNodes = nodes.get({ returnType: "Object" });
+                for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                }
+                allEdges = edges.get({ returnType: "Object" });
+                data = {nodes: nodes, edges: edges};
+                var options = {{options|safe}};
+                network = new vis.Network(container, data, options);
+                return network;
+            }
+            drawGraph();
+        </script>
+    </body>
+</html>
