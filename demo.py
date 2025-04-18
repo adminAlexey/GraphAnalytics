@@ -10,6 +10,7 @@ st.set_page_config(page_title="Demo", layout="wide")
 
 if 'page_loaded' not in st.session_state:
     st.session_state.page_loaded = False
+    time.sleep(5)  # Подождать 1 секунду после загрузки страницы
 if 'map_colors' not in st.session_state:
     st.session_state.map_colors = {
         'Отправитель': '#00FF00',

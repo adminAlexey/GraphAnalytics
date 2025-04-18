@@ -7,7 +7,7 @@ import os
 
 BACKEND_URL = "http://127.0.0.1:5000"
 print('front is run')
- 
+
 st.set_page_config(page_title="GraphAnalytics", layout="wide")
  
 def tooltip(message):
@@ -46,7 +46,11 @@ def tooltip(message):
     <span class="tooltiptext">{message}</span>
     </div>
     """
- 
+
+os.makedirs('graphs/', exist_ok=True)
+os.makedirs('mini_graphs/', exist_ok=True)
+os.makedirs('result/', exist_ok=True)
+
 if 'map_colors' not in st.session_state:
     st.session_state.map_colors = {
         'Отправитель': '#00FF00',
@@ -64,9 +68,9 @@ if 'clear_folders' not in st.session_state:
             os.remove('graphs/'+graph)
         except Exception as e:
             print('Ошибка удаления', e, graph)
-    for png in os.listdir('pngs/'):
+    for png in os.listdir('mini_graphs/'):
         try:
-            os.remove('pngs/' + png)
+            os.remove('mini_graphs/' + png)
         except Exception as e:
             print('Ошибка удаления', e, png)
     for other in os.listdir('result/'):
@@ -254,8 +258,8 @@ if uploaded_file:
  
  
  
-    if len(st.session_state.selected_columns) != 5 and len(st.session_state.selected_columns) != 3:
-        st.markdown(tooltip('Количество столбцов должно быть 3 или 5'), unsafe_allow_html=True)
+    if len(st.session_state.selected_columns) != 5 and len(st.session_state.selected_columns) != 3 and len(st.session_state.selected_columns) != 2:
+        st.markdown(tooltip('Количество столбцов должно быть 2, 3 или 5'), unsafe_allow_html=True)
     else:
         st.divider()
         col11, col22 = st.columns([1, 1])
@@ -266,9 +270,14 @@ if uploaded_file:
             if len(st.session_state.selected_columns) == 5:
                 selected_df[st.session_state.selected_columns[1]] = selected_df[st.session_state.selected_columns[1]].map(st.session_state.map_colors).fillna('green')
                 selected_df[st.session_state.selected_columns[3]] = selected_df[st.session_state.selected_columns[3]].map(st.session_state.map_colors).fillna('green')
-            else:
+            elif len(st.session_state.selected_columns) == 3:
                 selected_df.insert(1, 'flag1', 'green')
                 selected_df.insert(3, 'flag2', 'green')
+            else:
+                selected_df.insert(1, 'flag1', 'green')
+                selected_df.insert(3, 'flag3', 'green')                
+                selected_df.insert(4, 'amount', '')
+
             with col11:
                 text_spinner = "Построение графов"
                 with st.spinner(text_spinner):

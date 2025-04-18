@@ -24,7 +24,10 @@ def get_graph_stats(graph_name):
     graph_data = loaded[graph_name]
     num_nodes = len(graph_data['nodes'])
     num_edges = len(graph_data['edges'])
-    total_weight = sum(float(edge['label']) for edge in graph_data['edges'])
+    try:
+        total_weight = sum(float(edge['label']) for edge in graph_data['edges'])
+    except:
+        total_weight = 0
     return {
         'name': graph_name,
         'num_nodes': num_nodes,

@@ -6,7 +6,6 @@ import networkx as nx
 from pyvis.network import Network
 import pyvis
 import math
-import graphviz
 
 # Путь к директории pyvis
 pyvis_path = os.path.dirname(pyvis.__file__)
@@ -144,7 +143,10 @@ class Creator:
             amount = str(row[self.edge_column])
             for node in graph.nodes():
                 if str(node).title() == sender:  
-                    edge_value = math.ceil(float(amount)/50)
+                    try:
+                        edge_value = math.ceil(float(amount)/50)
+                    except:
+                        edge_value = 500000
                     for (min_val, max_val), color in edge_color_map.items():
                         if min_val <= edge_value < max_val:
                             edge_color = color
